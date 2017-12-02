@@ -39,8 +39,9 @@ public class PlacementManager : MonoBehaviour
       bool overlapping = colliders.Count != 0;
 
       Bounds groundBounds = Globals.Ground.GetComponent<Renderer>().bounds;
+      Bounds selectedBounds = selected.GetComponent<Renderer>().bounds;
 
-      bool validPlacement = !overlapping && (Mathf.Abs(selected.transform.position.x) <= Mathf.Abs(groundBounds.extents.x - 0.5f) && Mathf.Abs(selected.transform.position.z) <= Mathf.Abs(groundBounds.extents.z - 0.5f));
+      bool validPlacement = !overlapping && Mathf.Abs(selected.transform.position.x) + selectedBounds.extents.x <= Mathf.Abs(groundBounds.extents.x) && Mathf.Abs(selected.transform.position.z) + selectedBounds.extents.z <= Mathf.Abs(groundBounds.extents.z);
 
       selected.GetComponent<Renderer>().material.shader = tintShader;
 
@@ -51,6 +52,7 @@ public class PlacementManager : MonoBehaviour
         if (validPlacement)
         {
           selected.GetComponent<Renderer>().material = originalMaterial;
+          selected.GetComponent<Building>().selcted = false;
 
           Select(selected);
         }
@@ -77,8 +79,9 @@ public class PlacementManager : MonoBehaviour
     float desiredY = Globals.Ground.transform.position.y + selected.transform.localScale.y / 2 + Globals.Ground.transform.localScale.y / 2;
 
     selected.transform.position = new Vector3(0, desiredY, 0);
-
     selected.name = "House";
+
+    selected.GetComponent<Building>().selcted = true;
   }
 
   public void DeSelect()

@@ -24,7 +24,6 @@ public class HouseSpawner : MonoBehaviour
 
           if (Physics.OverlapBox(position, houseBounds.extents * 2, Quaternion.identity, LayerMask.GetMask("House")).Length == 0)
           {
-            print(j);
             break;
           }
         }
