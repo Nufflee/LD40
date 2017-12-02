@@ -17,11 +17,25 @@ public class Building : MonoBehaviour
 
   private int failed;
 
+  private ParticleSystem collapsingParticleSystem;
+
+  private ParticleSystem particleSystem;
+
   /*private List<float> fs = new List<float>();#1#*/
 
   private void Start()
   {
     nextClickTime = Time.time + 0.2f;
+    collapsingParticleSystem = Resources.Load<ParticleSystem>("Prefabs/CollapsingParticleSystem");
+
+    particleSystem = Instantiate(collapsingParticleSystem, transform.position, Quaternion.identity);
+    ParticleSystem.EmissionModule emission = particleSystem.emission;
+    emission.rateOverTimeMultiplier = 30.0f * tier;
+    ParticleSystem.ShapeModule shape = particleSystem.shape;
+    shape.scale = new Vector3(GetComponent<Renderer>().bounds.extents.x * 1.5f, 0.1f, GetComponent<Renderer>().bounds.extents.z * 1.5f);
+    particleSystem.Play();
+
+    StartCoroutine(CollapseCoroutine());
   }
 
   private void Update()
@@ -35,7 +49,12 @@ public class Building : MonoBehaviour
     }
 
     if (failed >= 3)
-      print("moving out!");
+    {
+      particleSystem = Instantiate(collapsingParticleSystem, transform.position, Quaternion.identity);
+      ParticleSystem.ShapeModule shape = particleSystem.shape;
+      shape.scale = GetComponent<Renderer>().bounds.extents;
+      particleSystem.Play();
+    }
 
     /* for (int i = 0; i < 1000; i++)
      {
@@ -55,7 +74,7 @@ public class Building : MonoBehaviour
 
     if (Time.time >= nextClickTime + 3.0f && (!scalingDown && !scalingUp) && !popup.GetComponent<Animation>().isPlaying)
     {
-      popup.GetComponent<Animation>().Play("NoElectricityPopUpWarning");
+      popup.GetComponent<Animation>().Play("PopUpWarning");
     }
 
     if (Time.time >= nextClickTime && popup == null)
@@ -77,20 +96,43 @@ public class Building : MonoBehaviour
   }
 */
 
+  private IEnumerator CollapseCoroutine()
+  {
+    while (transform.position.y >= -0.05f - GetComponent<Renderer>().bounds.extents.y)
+    {
+      transform.position -= new Vector3(0.0f, 0.03f, 0.0f);
+
+      yield return null;
+    }
+
+    StartCoroutine(ScaleDownParticleSystemCoroutine());
+  }
+
   private IEnumerator ScaleUpCoroutine()
   {
     scalingUp = true;
-    popup.GetComponent<Animation>().Play("NoElectricityPopUpScaleUp");
-    yield return new WaitForSeconds(popup.GetComponent<Animation>().GetClip("NoElectricityPopUpScaleUp").length);
+    popup.GetComponent<Animation>().Play("ScaleUp");
+    yield return new WaitForSeconds(popup.GetComponent<Animation>().GetClip("ScaleUp").length);
     scalingUp = false;
+  }
+
+  private IEnumerator ScaleDownParticleSystemCoroutine()
+  {
+    particleSystem.GetComponent<Animation>().Play("ScaleDown");
+
+    yield return new WaitForSeconds(particleSystem.GetComponent<Animation>().GetClip("ScaleDown").length);
+
+    Destroy(particleSystem.gameObject);
+    Destroy(gameObject);
+    Destroy(popup);
   }
 
   private IEnumerator ScaleDownCoroutine()
   {
     failed++;
     scalingDown = true;
-    popup.GetComponent<Animation>().Play("NoElectricityPopUpScaleDown");
-    yield return new WaitForSeconds(popup.GetComponent<Animation>().GetClip("NoElectricityPopUpScaleDown").length);
+    popup.GetComponent<Animation>().Play("ScaleDown");
+    yield return new WaitForSeconds(popup.GetComponent<Animation>().GetClip("ScaleDown").length);
     Destroy(popup);
     popup = null;
     nextClickTime = Time.time + Random.Range(3.0f, 8.0f) - tier / 4.0f;
