@@ -1,15 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlacementManager : MonoBehaviour
 {
   private GameObject selected;
   private Material originalMaterial;
+  private Shader tintShader;
 
   private void Start()
   {
-    Select(Instantiate(Resources.Load<GameObject>("Prefabs/House")));
+    tintShader = Resources.Load<Shader>("Shaders/Tint");
   }
 
   private void Update()
@@ -24,7 +26,7 @@ public class PlacementManager : MonoBehaviour
       if (hitInfo.collider == null || hitInfo.normal.z < 0)
         return;
 
-      List<Collider> colliders = Physics.OverlapBox(selected.transform.position, selected.GetComponent<Renderer>().bounds.extents / 2, Quaternion.identity, LayerMask.GetMask("House")).ToList();
+      List<Collider> colliders = Physics.OverlapBox(selected.transform.position, selected.GetComponent<Renderer>().bounds.extents, Quaternion.identity, LayerMask.GetMask("House")).ToList();
 
       for (int i = 0; i < colliders.Count; i++)
       {
@@ -36,30 +38,52 @@ public class PlacementManager : MonoBehaviour
 
       bool overlapping = colliders.Count != 0;
 
-      selected.GetComponent<Renderer>().material.shader = Resources.Load<Shader>("Shaders/Tint");
+      Bounds groundBounds = Globals.Ground.GetComponent<Renderer>().bounds;
 
-      selected.GetComponent<Renderer>().material.SetColor("_ColorTint", overlapping ? Utils.HexToColor("#e80e0e") : Utils.HexToColor("#13f039"));
+      bool validPlacement = !overlapping && (Mathf.Abs(selected.transform.position.x) <= Mathf.Abs(groundBounds.extents.x - 0.5f) && Mathf.Abs(selected.transform.position.z) <= Mathf.Abs(groundBounds.extents.z - 0.5f));
 
-      if (Input.GetMouseButtonDown(0))
+      selected.GetComponent<Renderer>().material.shader = tintShader;
+
+      selected.GetComponent<Renderer>().material.SetColor("_ColorTint", !validPlacement ? Utils.HexToColor("#e80e0e") : Utils.HexToColor("#13f039"));
+
+      if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject(-1))
       {
-        if (!overlapping)
+        if (validPlacement)
         {
           selected.GetComponent<Renderer>().material = originalMaterial;
 
-          selected = null;
+          Select(selected);
         }
+      }
+
+      if (Input.GetKeyDown(KeyCode.Escape))
+      {
+        DeSelect();
       }
 
       if (selected == null)
         return;
 
-      selected.transform.position = new Vector3(Mathf.RoundToInt(hitInfo.point.x), 1, Mathf.RoundToInt(hitInfo.point.z));
+      selected.transform.position = new Vector3(hitInfo.point.x, selected.transform.position.y, hitInfo.point.z);
     }
   }
 
   public void Select(GameObject placeable)
   {
-    selected = placeable;
-    originalMaterial = selected.GetComponent<Renderer>().material;
+    originalMaterial = placeable.GetComponent<Renderer>().sharedMaterial;
+
+    selected = Instantiate(placeable);
+
+    float desiredY = Globals.Ground.transform.position.y + selected.transform.localScale.y / 2 + Globals.Ground.transform.localScale.y / 2;
+
+    selected.transform.position = new Vector3(0, desiredY, 0);
+
+    selected.name = "House";
+  }
+
+  public void DeSelect()
+  {
+    Destroy(selected);
+    selected = null;
   }
 }

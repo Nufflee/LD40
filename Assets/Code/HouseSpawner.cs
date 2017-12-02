@@ -9,8 +9,6 @@ public class HouseSpawner : MonoBehaviour
   {
     housePrefab = Resources.Load<GameObject>("Prefabs/House");
 
-    print(Globals.Ground.GetComponent<Renderer>().bounds);
-
     for (int i = 0; i < 10; i++)
     {
       Bounds groundBounds = Globals.Ground.GetComponent<Renderer>().bounds;
