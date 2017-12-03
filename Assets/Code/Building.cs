@@ -6,7 +6,7 @@ public class Building : MonoBehaviour
   public int price;
   public int tier;
 
-  public bool selcted;
+  public bool selected;
 
   private float nextClickTime = -1;
 
@@ -25,22 +25,12 @@ public class Building : MonoBehaviour
 
   private void Start()
   {
-    nextClickTime = Time.time + 0.2f;
     collapsingParticleSystem = Resources.Load<ParticleSystem>("Prefabs/CollapsingParticleSystem");
-
-    particleSystem = Instantiate(collapsingParticleSystem, transform.position, Quaternion.identity);
-    ParticleSystem.EmissionModule emission = particleSystem.emission;
-    emission.rateOverTimeMultiplier = 30.0f * tier;
-    ParticleSystem.ShapeModule shape = particleSystem.shape;
-    shape.scale = new Vector3(GetComponent<Renderer>().bounds.extents.x * 1.5f, 0.1f, GetComponent<Renderer>().bounds.extents.z * 1.5f);
-    particleSystem.Play();
-
-    StartCoroutine(CollapseCoroutine());
   }
 
   private void Update()
   {
-    if (selcted)
+    if (selected)
       return;
 
     if (nextClickTime == -1)
@@ -51,9 +41,13 @@ public class Building : MonoBehaviour
     if (failed >= 3)
     {
       particleSystem = Instantiate(collapsingParticleSystem, transform.position, Quaternion.identity);
+      ParticleSystem.EmissionModule emission = particleSystem.emission;
+      emission.rateOverTimeMultiplier = 30.0f * tier;
       ParticleSystem.ShapeModule shape = particleSystem.shape;
-      shape.scale = GetComponent<Renderer>().bounds.extents;
+      shape.scale = new Vector3(GetComponent<Renderer>().bounds.extents.x * 1.5f, 0.1f, GetComponent<Renderer>().bounds.extents.z * 1.5f);
       particleSystem.Play();
+
+      StartCoroutine(CollapseCoroutine());
     }
 
     /* for (int i = 0; i < 1000; i++)
@@ -98,6 +92,11 @@ public class Building : MonoBehaviour
 
   private IEnumerator CollapseCoroutine()
   {
+    selected = true;
+
+    if (popup != null)
+      StartCoroutine(ScaleDownCoroutine());
+
     while (transform.position.y >= -0.05f - GetComponent<Renderer>().bounds.extents.y)
     {
       transform.position -= new Vector3(0.0f, 0.03f, 0.0f);
@@ -124,7 +123,6 @@ public class Building : MonoBehaviour
 
     Destroy(particleSystem.gameObject);
     Destroy(gameObject);
-    Destroy(popup);
   }
 
   private IEnumerator ScaleDownCoroutine()

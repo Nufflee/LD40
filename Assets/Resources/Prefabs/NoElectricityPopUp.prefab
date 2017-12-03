@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 114696294344602104}
   - component: {fileID: 114921354428537202}
   - component: {fileID: 111841348828701568}
+  - component: {fileID: 114994121290621300}
   m_Layer: 5
   m_Name: NoElectricityPopUp
   m_TagString: Untagged
@@ -83,6 +84,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 63cf8be861c0a204382e4b17eb845d9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114994121290621300
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1462055600531716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d336a6c9d1a4f16b122454af953b9e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!222 &222796796634128846

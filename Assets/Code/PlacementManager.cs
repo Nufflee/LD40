@@ -52,7 +52,7 @@ public class PlacementManager : MonoBehaviour
         if (validPlacement)
         {
           selected.GetComponent<Renderer>().material = originalMaterial;
-          selected.GetComponent<Building>().selcted = false;
+          selected.GetComponent<Building>().selected = false;
 
           Select(selected);
         }
@@ -81,7 +81,7 @@ public class PlacementManager : MonoBehaviour
     selected.transform.position = new Vector3(0, desiredY, 0);
     selected.name = "House";
 
-    selected.GetComponent<Building>().selcted = true;
+    selected.GetComponent<Building>().selected = true;
   }
 
   public void DeSelect()
