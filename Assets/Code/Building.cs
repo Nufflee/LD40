@@ -41,14 +41,37 @@ public class Building : MonoBehaviour
     }
     if (failed >= 3)
     {
-      particleSystem = Instantiate(collapsingParticleSystem, transform.position, Quaternion.identity);
-      ParticleSystem.EmissionModule emission = particleSystem.emission;
-      emission.rateOverTimeMultiplier = 30.0f * tier;
-      ParticleSystem.ShapeModule shape = particleSystem.shape;
-      shape.scale = new Vector3(gameObject.GetAbsoluteBounds().extents.x * 1.5f, 0.1f, gameObject.GetAbsoluteBounds().extents.z * 1.5f);
-      particleSystem.Play();
+      if (tier == 1)
+      {
+        Globals.PlacementManager.tier1BuildingCount--;
+      }
+      if (tier == 2)
+      {
+        Globals.PlacementManager.tier2BuildingCount--;
+      }
+      if (tier == 3)
+      {
+        Globals.PlacementManager.tier3BuildingCount--;
+      }
 
-      StartCoroutine(CollapseCoroutine());
+      Collapse();
+    }
+
+    RaycastHit hitInfo;
+
+    if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo, LayerMask.GetMask("House")))
+    {
+      if (Input.GetMouseButtonDown(0) && hitInfo.transform.root == transform && !Globals.PlacementManager.bulldozing)
+      {
+        if (popup != null)
+        {
+          StopAllCoroutines();
+
+          failed--;
+
+          StartCoroutine(ScaleDownCoroutine());
+        }
+      }
     }
 
     /* for (int i = 0; i < 1000; i++)
@@ -79,17 +102,17 @@ public class Building : MonoBehaviour
     }
   }
 
-/*
-  private IEnumerator RandomMoveCoroutine()
+  public void Collapse()
   {
-    while (popup != null)
-    {
-      popup.transform.position = new Vector3(popup.transform.position.x + Random.Range(-0.06f, 0.06f), popup.transform.position.y, popup.transform.position.z);
+    particleSystem = Instantiate(collapsingParticleSystem, transform.position, Quaternion.identity);
+    ParticleSystem.EmissionModule emission = particleSystem.emission;
+    emission.rateOverTimeMultiplier = 150.0f * tier;
+    ParticleSystem.ShapeModule shape = particleSystem.shape;
+    shape.scale = new Vector3(gameObject.GetAbsoluteBounds().extents.x, 0.3f, gameObject.GetAbsoluteBounds().extents.z);
+    particleSystem.Play();
 
-      yield return null;
-    }
+    StartCoroutine(CollapseCoroutine());
   }
-*/
 
   private IEnumerator CollapseCoroutine()
   {
@@ -98,7 +121,7 @@ public class Building : MonoBehaviour
     if (popup != null)
       StartCoroutine(ScaleDownCoroutine());
 
-    while (transform.position.y >= -0.05f - gameObject.GetAbsoluteBounds().extents.y)
+    while (transform.position.y >= -1.5f - gameObject.GetAbsoluteBounds().extents.y)
     {
       transform.position -= new Vector3(0.0f, 0.03f, 0.0f);
 
@@ -138,21 +161,6 @@ public class Building : MonoBehaviour
     scalingDown = false;
 
 //popup = Instantiate(Globals.Buildings.NoElectricityPopUp, new Vector3(transform.position.x + 0.36f, transform.position.y + 2, transform.position.z), Quaternion.identity, Globals.WorldSpaceCanvas.transform);
-  }
-
-  private void OnMouseOver()
-  {
-    if (Input.GetMouseButtonDown(0))
-    {
-      if (popup != null)
-      {
-        StopAllCoroutines();
-
-        failed--;
-
-        StartCoroutine(ScaleDownCoroutine());
-      }
-    }
   }
 
   private void OnCollisionEnter(Collision other)

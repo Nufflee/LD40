@@ -3,7 +3,7 @@
 public class Globals : MonoBehaviour
 {
   public static GameObject Ground { get; private set; }
-  public static PlacementManager PlacementManager { get; private set; }
+  public static PlacementManager PlacementManager { get; set; }
   public static Buildings Buildings { get; private set; }
   public static Canvas WorldSpaceCanvas { get; private set; }
 

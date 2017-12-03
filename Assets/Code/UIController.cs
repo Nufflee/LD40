@@ -19,15 +19,20 @@ public class UIController : MonoBehaviour
 
     if (tier == 1)
     {
-      Globals.PlacementManager.Select(tier1);
+      Globals.PlacementManager.Select(Globals.Buildings.Tier1);
     }
     else if (tier == 2)
     {
-      Globals.PlacementManager.Select(tier2);
+      Globals.PlacementManager.Select(Globals.Buildings.Tier2);
     }
     else if (tier == 3)
     {
-      Globals.PlacementManager.Select(tier3);
+      Globals.PlacementManager.Select(Globals.Buildings.Tier3);
     }
+  }
+
+  public void OnClickBulldoze()
+  {
+    Globals.PlacementManager.bulldozing = true;
   }
 }

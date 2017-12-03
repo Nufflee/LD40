@@ -1,28 +1,53 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class PlacementManager : MonoBehaviour
 {
   private GameObject selected;
-  private Material originalMaterial;
-  private Shader tintShader;
+
+  private TextMeshProUGUI invalidPlacementText;
+
+  public int tier1BuildingCount;
+  public int tier2BuildingCount;
+  public int tier3BuildingCount;
+
+  public bool bulldozing;
 
   private void Start()
   {
-    tintShader = Resources.Load<Shader>("Shaders/Tint");
+    invalidPlacementText = GameObject.Find("InvalidPlacementText").GetComponent<TextMeshProUGUI>();
   }
 
   private void Update()
   {
-    if (selected == null)
-      return;
-
     RaycastHit hitInfo;
 
     if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo, Mathf.Infinity, LayerMask.GetMask("Ground")))
     {
+      if (bulldozing)
+      {
+        if (Input.GetMouseButtonDown(0))
+        {
+          print(hitInfo.collider.transform.root.GetComponent<Building>() != null);
+          if (hitInfo.collider.transform.root.GetComponent<Building>() != null)
+          {
+            hitInfo.collider.transform.root.GetComponent<Building>().Collapse();
+          }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(1))
+        {
+          bulldozing = false;
+        }
+      }
+
+      if (selected == null)
+        return;
+
       if (hitInfo.collider == null || hitInfo.normal.z < 0)
         return;
 
@@ -30,34 +55,27 @@ public class PlacementManager : MonoBehaviour
 
       for (int i = 0; i < colliders.Count; i++)
       {
-        if (colliders[i].gameObject == selected.gameObject || colliders[i].gameObject.transform.root == selected.transform)
+        if (colliders[i].gameObject == selected.gameObject || colliders[i].transform.IsChildOf(selected.transform))
         {
           colliders.RemoveAt(i);
         }
       }
 
-      print(colliders.Count);
+      for (int i = 0; i < colliders.Count; i++)
+      {
+        if (colliders[i].gameObject.transform.IsChildOf(selected.transform))
+          colliders.RemoveAt(i);
+      }
 
       bool overlapping = colliders.Count > 0;
-
-      print(colliders.Count);
 
       Bounds groundBounds = Globals.Ground.GetComponent<Renderer>().bounds;
       Bounds selectedBounds = selected.GetAbsoluteBounds();
 
       bool validPlacement = !overlapping && Mathf.Abs(selected.transform.position.x) + selectedBounds.extents.x <= Mathf.Abs(groundBounds.extents.x) && Mathf.Abs(selected.transform.position.z) + selectedBounds.extents.z <= Mathf.Abs(groundBounds.extents.z);
 
-      print("overlapping: " + overlapping);
-
-      /*selected.GetComponent<Renderer>().material.shader = tintShader;*/
-
-/*
-      selected.GetComponent<Renderer>().material.SetColor("_ColorTint", !validPlacement ? Utils.HexToColor("#e80e0e") : Utils.HexToColor("#13f039"));
-*/
-
       if (Input.GetKeyDown(KeyCode.R))
       {
-        print("r");
         selected.transform.Rotate(new Vector3(0, 1, 0), 90.0f);
       }
 
@@ -65,14 +83,32 @@ public class PlacementManager : MonoBehaviour
       {
         if (validPlacement)
         {
-/*selected.GetComponent<Renderer>().material = originalMaterial;*/
+          if (selected.GetComponent<Building>().tier == 1)
+          {
+            tier1BuildingCount++;
+          }
+
+          if (selected.GetComponent<Building>().tier == 2)
+          {
+            tier2BuildingCount++;
+          }
+
+          if (selected.GetComponent<Building>().tier == 3)
+          {
+            tier3BuildingCount++;
+          }
+
           selected.GetComponent<Building>().selected = false;
 
           Select(selected);
         }
+        else
+        {
+          StartCoroutine(ShowInvalidPlacementText());
+        }
       }
 
-      if (Input.GetKeyDown(KeyCode.Escape))
+      if (Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(1))
       {
         DeSelect();
       }
@@ -86,14 +122,25 @@ public class PlacementManager : MonoBehaviour
 
   public void Select(GameObject placeable)
   {
-    /*originalMaterial = placeable.GetComponent<Renderer>().sharedMaterial;*/
-
     selected = Instantiate(placeable);
 
-    float desiredY = Globals.Ground.transform.position.y + selected.GetAbsoluteBounds().extents.y / 2 /*+ Globals.Ground.transform.localScale.y / 2*/;
+    float desiredY = Globals.Ground.transform.position.y + selected.GetAbsoluteBounds().extents.y / 2;
 
     selected.transform.position = new Vector3(0, desiredY, 0);
     selected.name = "House";
+
+    Color color = Random.ColorHSV();
+
+    foreach (Renderer renderer in selected.GetComponentsInChildren<Renderer>())
+    {
+      foreach (Material material in renderer.materials)
+      {
+        if (material.name.Contains("HouseBase"))
+        {
+          material.color = color;
+        }
+      }
+    }
 
     selected.GetComponent<Building>().selected = true;
   }
@@ -104,12 +151,22 @@ public class PlacementManager : MonoBehaviour
     selected = null;
   }
 
-  private void OnDrawGizmos()
+  private IEnumerator ShowInvalidPlacementText()
   {
-    if (selected == null)
-      return;
+    while (invalidPlacementText.GetComponent<TextMeshProUGUI>().color.a <= 1)
+    {
+      invalidPlacementText.GetComponent<TextMeshProUGUI>().color += new Color(0.0f, 0.0f, 0.0f, 0.1f);
 
-    Gizmos.color = Color.green;
-    Gizmos.DrawCube(selected.GetAbsoluteBounds().center, selected.GetAbsoluteBounds().extents);
+      yield return null;
+    }
+
+    yield return new WaitForSeconds(0.5f);
+
+    while (invalidPlacementText.GetComponent<TextMeshProUGUI>().color.a > 0)
+    {
+      invalidPlacementText.GetComponent<TextMeshProUGUI>().color -= new Color(0.0f, 0.0f, 0.0f, 0.1f);
+
+      yield return null;
+    }
   }
 }
