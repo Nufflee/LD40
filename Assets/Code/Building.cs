@@ -6,7 +6,9 @@ public class Building : MonoBehaviour
   public int price;
   public int tier;
 
-  public bool selected;
+  [HideInInspector] public bool selected;
+
+  public bool overlapping;
 
   private float nextClickTime = -1;
 
@@ -37,14 +39,13 @@ public class Building : MonoBehaviour
     {
       nextClickTime = Time.time + Random.Range(3.0f, 8.0f) - tier / 4.0f;
     }
-
     if (failed >= 3)
     {
       particleSystem = Instantiate(collapsingParticleSystem, transform.position, Quaternion.identity);
       ParticleSystem.EmissionModule emission = particleSystem.emission;
       emission.rateOverTimeMultiplier = 30.0f * tier;
       ParticleSystem.ShapeModule shape = particleSystem.shape;
-      shape.scale = new Vector3(GetComponent<Renderer>().bounds.extents.x * 1.5f, 0.1f, GetComponent<Renderer>().bounds.extents.z * 1.5f);
+      shape.scale = new Vector3(gameObject.GetAbsoluteBounds().extents.x * 1.5f, 0.1f, gameObject.GetAbsoluteBounds().extents.z * 1.5f);
       particleSystem.Play();
 
       StartCoroutine(CollapseCoroutine());
@@ -73,7 +74,7 @@ public class Building : MonoBehaviour
 
     if (Time.time >= nextClickTime && popup == null)
     {
-      popup = Instantiate(Globals.Buildings.NoElectricityPopUp, new Vector3(transform.position.x + 0.367f, transform.position.y + GetComponent<Renderer>().bounds.extents.y + 2, transform.position.z), Quaternion.identity, Globals.WorldSpaceCanvas.transform);
+      popup = Instantiate(Globals.Buildings.NoElectricityPopUp, new Vector3(transform.position.x + 0.367f, transform.position.y + gameObject.GetAbsoluteBounds().extents.y + 2, transform.position.z), Quaternion.identity, Globals.WorldSpaceCanvas.transform);
       StartCoroutine(ScaleUpCoroutine());
     }
   }
@@ -97,7 +98,7 @@ public class Building : MonoBehaviour
     if (popup != null)
       StartCoroutine(ScaleDownCoroutine());
 
-    while (transform.position.y >= -0.05f - GetComponent<Renderer>().bounds.extents.y)
+    while (transform.position.y >= -0.05f - gameObject.GetAbsoluteBounds().extents.y)
     {
       transform.position -= new Vector3(0.0f, 0.03f, 0.0f);
 
@@ -152,5 +153,15 @@ public class Building : MonoBehaviour
         StartCoroutine(ScaleDownCoroutine());
       }
     }
+  }
+
+  private void OnCollisionEnter(Collision other)
+  {
+    overlapping = true;
+  }
+
+  private void OnCollisionExit(Collision other)
+  {
+    overlapping = false;
   }
 }
