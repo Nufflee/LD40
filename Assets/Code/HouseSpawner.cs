@@ -3,6 +3,7 @@
 public class HouseSpawner : MonoBehaviour
 {
   private int score;
+  private int tempScore;
 
   // Use this for initialization
   public void Start()
@@ -33,17 +34,17 @@ public class HouseSpawner : MonoBehaviour
 
   public void ModifyScore(int modifyBy)
   {
-    
+    tempScore += modifyBy;
   }
-  
+
   private int tier1Chance, tier2Chance, tier3Chance;
 
   // Update is called once per frame
   public void Update()
   {
-    print(score);
+    int newScore = tempScore + Globals.PlacementManager.tier1BuildingCount + Globals.PlacementManager.tier2BuildingCount * 2 + Globals.PlacementManager.tier3BuildingCount * 3; // get money and click success rate here
 
-    int newScore = Globals.PlacementManager.tier1BuildingCount + Globals.PlacementManager.tier2BuildingCount * 2 + Globals.PlacementManager.tier3BuildingCount * 3; // get money and click success rate here
+    print("Current score: " + newScore);
 
     if (newScore - score >= 10)
     {

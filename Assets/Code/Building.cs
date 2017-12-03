@@ -23,6 +23,8 @@ public class Building : MonoBehaviour
 
   private ParticleSystem particleSystem;
 
+  private bool actionPending;
+
   /*private List<float> fs = new List<float>();#1#*/
 
   private void Start()
@@ -32,6 +34,8 @@ public class Building : MonoBehaviour
 
   private void Update()
   {
+    print(failed);
+
     if (selected)
       return;
 
@@ -39,7 +43,7 @@ public class Building : MonoBehaviour
     {
       nextClickTime = Time.time + Random.Range(3.0f, 8.0f) - tier / 4.0f;
     }
-    if (failed >= 3)
+    if (failed == 1)
     {
       Collapse();
     }
@@ -48,13 +52,15 @@ public class Building : MonoBehaviour
 
     if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo, LayerMask.GetMask("House")))
     {
-      if (Input.GetMouseButtonDown(0) && hitInfo.transform.root == transform && !Globals.PlacementManager.bulldozing)
+      if (Input.GetMouseButtonDown(0) && hitInfo.transform.root == transform && !Globals.PlacementManager.bulldozing && !Globals.PlacementManager.Selecting)
       {
-        if (popup != null)
+        if (actionPending)
         {
           StopAllCoroutines();
 
           failed--;
+
+          Globals.HouseSpawner.ModifyScore(2);
 
           StartCoroutine(ScaleDownCoroutine());
         }
@@ -74,6 +80,7 @@ public class Building : MonoBehaviour
     {
       //popup.GetComponent<Animation>().Stop();
 
+      failed++;
       StartCoroutine(ScaleDownCoroutine());
     }
 
@@ -91,6 +98,8 @@ public class Building : MonoBehaviour
 
   public void Collapse()
   {
+    Globals.HouseSpawner.ModifyScore(-5);
+
     if (tier == 1)
     {
       Globals.PlacementManager.tier1BuildingCount--;
@@ -136,6 +145,7 @@ public class Building : MonoBehaviour
     scalingUp = true;
     popup.GetComponent<Animation>().Play("ScaleUp");
     yield return new WaitForSeconds(popup.GetComponent<Animation>().GetClip("ScaleUp").length);
+    actionPending = true;
     scalingUp = false;
   }
 
@@ -151,7 +161,7 @@ public class Building : MonoBehaviour
 
   private IEnumerator ScaleDownCoroutine()
   {
-    failed++;
+    actionPending = false;
     scalingDown = true;
     popup.GetComponent<Animation>().Play("ScaleDown");
     yield return new WaitForSeconds(popup.GetComponent<Animation>().GetClip("ScaleDown").length);

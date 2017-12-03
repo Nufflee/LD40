@@ -30,11 +30,19 @@ public class Globals : MonoBehaviour
     get { return worldSpaceCanvas ?? (worldSpaceCanvas = GameObject.Find("WorldSpaceCanvas").GetComponent<Canvas>()); }
   }
 
+  private static HouseSpawner houseSpawner;
+
+  public static HouseSpawner HouseSpawner
+  {
+    get { return houseSpawner ?? (houseSpawner = FindObjectOfType<HouseSpawner>()); }
+  }
+
   private void Awake()
   {
     ground = GameObject.Find("Ground");
     placementManager = FindObjectOfType<PlacementManager>();
     buildings = FindObjectOfType<Buildings>();
     worldSpaceCanvas = GameObject.Find("WorldSpaceCanvas").GetComponent<Canvas>();
+    houseSpawner = FindObjectOfType<HouseSpawner>();
   }
 }

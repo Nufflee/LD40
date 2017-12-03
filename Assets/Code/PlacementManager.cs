@@ -17,6 +17,11 @@ public class PlacementManager : MonoBehaviour
 
   public bool bulldozing;
 
+  public bool Selecting
+  {
+    get { return selected != null; }
+  }
+
   private void Start()
   {
     invalidPlacementText = GameObject.Find("InvalidPlacementText").GetComponent<TextMeshProUGUI>();
