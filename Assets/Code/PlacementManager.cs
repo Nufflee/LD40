@@ -30,7 +30,7 @@ public class PlacementManager : MonoBehaviour
 
       for (int i = 0; i < colliders.Count; i++)
       {
-        if (colliders[i].gameObject == selected.gameObject || colliders[i].transform.root.gameObject == selected.transform.gameObject)
+        if (colliders[i].gameObject == selected.gameObject || colliders[i].gameObject.transform.root == selected.transform)
         {
           colliders.RemoveAt(i);
         }
@@ -38,7 +38,7 @@ public class PlacementManager : MonoBehaviour
 
       print(colliders.Count);
 
-      bool overlapping = colliders.Count > 1;
+      bool overlapping = colliders.Count > 0;
 
       print(colliders.Count);
 
