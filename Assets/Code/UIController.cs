@@ -33,6 +33,7 @@ public class UIController : MonoBehaviour
 
   public void OnClickBulldoze()
   {
+    Globals.PlacementManager.DeSelect();
     Globals.PlacementManager.bulldozing = true;
   }
 }

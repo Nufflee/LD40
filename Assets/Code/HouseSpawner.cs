@@ -31,15 +31,17 @@ public class HouseSpawner : MonoBehaviour
     }*/
   }
 
+  public void ModifyScore(int modifyBy)
+  {
+    
+  }
+  
   private int tier1Chance, tier2Chance, tier3Chance;
 
   // Update is called once per frame
   public void Update()
   {
-    if (Globals.PlacementManager == null)
-    {
-      Globals.PlacementManager = new GameObject().AddComponent<PlacementManager>();
-    }
+    print(score);
 
     int newScore = Globals.PlacementManager.tier1BuildingCount + Globals.PlacementManager.tier2BuildingCount * 2 + Globals.PlacementManager.tier3BuildingCount * 3; // get money and click success rate here
 
@@ -97,11 +99,9 @@ public class HouseSpawner : MonoBehaviour
       }
 
       int chance = Random.Range(0, 101);
-      print(chance);
 
       if (chance <= tier1Chance && chance >= 0)
       {
-        print(string.Format("Spawning tier 1 at {0}", chance));
         Spawn(1);
       }
       else
@@ -109,7 +109,6 @@ public class HouseSpawner : MonoBehaviour
         chance = Random.Range(0, 101);
         if (chance <= tier2Chance)
         {
-          print(string.Format("Spawning tier 2 at {0}", chance));
           Spawn(2);
         }
         else
@@ -118,7 +117,6 @@ public class HouseSpawner : MonoBehaviour
 
           if (chance <= tier3Chance)
           {
-            print(string.Format("Spawning tier 3 at {0}", chance));
             Spawn(3);
           }
         }

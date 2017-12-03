@@ -26,13 +26,12 @@ public class PlacementManager : MonoBehaviour
   {
     RaycastHit hitInfo;
 
-    if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo, Mathf.Infinity, LayerMask.GetMask("Ground")))
+    if (bulldozing)
     {
-      if (bulldozing)
+      if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo, Mathf.Infinity, LayerMask.GetMask("House")))
       {
         if (Input.GetMouseButtonDown(0))
         {
-          print(hitInfo.collider.transform.root.GetComponent<Building>() != null);
           if (hitInfo.collider.transform.root.GetComponent<Building>() != null)
           {
             hitInfo.collider.transform.root.GetComponent<Building>().Collapse();
@@ -44,10 +43,13 @@ public class PlacementManager : MonoBehaviour
           bulldozing = false;
         }
       }
+    }
 
-      if (selected == null)
-        return;
+    if (selected == null)
+      return;
 
+    if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo, Mathf.Infinity, LayerMask.GetMask("Ground")))
+    {
       if (hitInfo.collider == null || hitInfo.normal.z < 0)
         return;
 
@@ -122,6 +124,8 @@ public class PlacementManager : MonoBehaviour
 
   public void Select(GameObject placeable)
   {
+    bulldozing = false;
+
     selected = Instantiate(placeable);
 
     float desiredY = Globals.Ground.transform.position.y + selected.GetAbsoluteBounds().extents.y / 2;

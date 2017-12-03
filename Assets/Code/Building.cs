@@ -41,19 +41,6 @@ public class Building : MonoBehaviour
     }
     if (failed >= 3)
     {
-      if (tier == 1)
-      {
-        Globals.PlacementManager.tier1BuildingCount--;
-      }
-      if (tier == 2)
-      {
-        Globals.PlacementManager.tier2BuildingCount--;
-      }
-      if (tier == 3)
-      {
-        Globals.PlacementManager.tier3BuildingCount--;
-      }
-
       Collapse();
     }
 
@@ -104,6 +91,19 @@ public class Building : MonoBehaviour
 
   public void Collapse()
   {
+    if (tier == 1)
+    {
+      Globals.PlacementManager.tier1BuildingCount--;
+    }
+    if (tier == 2)
+    {
+      Globals.PlacementManager.tier2BuildingCount--;
+    }
+    if (tier == 3)
+    {
+      Globals.PlacementManager.tier3BuildingCount--;
+    }
+
     particleSystem = Instantiate(collapsingParticleSystem, transform.position, Quaternion.identity);
     ParticleSystem.EmissionModule emission = particleSystem.emission;
     emission.rateOverTimeMultiplier = 150.0f * tier;
