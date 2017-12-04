@@ -143,7 +143,7 @@ Transform:
   m_GameObject: {fileID: 1389575599000306}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_Children:
   - {fileID: 4982922231758582}
   - {fileID: 4017568506068816}
@@ -336,3 +336,4 @@ MonoBehaviour:
   price: 75000
   tier: 2
   selected: 0
+  overlapping: 0

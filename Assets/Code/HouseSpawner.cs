@@ -30,6 +30,125 @@ public class HouseSpawner : MonoBehaviour
 
       Instantiate(housePrefab, position, Quaternion.identity);
     }*/
+
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(1);
+    Spawn(3);
+    Spawn(3);
+    Spawn(3);
   }
 
   public void ModifyScore(int modifyBy)
@@ -147,13 +266,13 @@ public class HouseSpawner : MonoBehaviour
 
     Vector3 position = new Vector3(Random.Range(-groundBounds.extents.x + houseBounds.extents.x, groundBounds.extents.x - houseBounds.extents.x), 1, Random.Range(-groundBounds.extents.z + houseBounds.extents.z, groundBounds.extents.z - houseBounds.extents.z));
 
-    if (Physics.OverlapBox(position, houseBounds.extents * 2, Quaternion.identity, LayerMask.GetMask("House")).Length != 0)
+    if (Physics.OverlapBox(position, houseBounds.extents, Quaternion.identity, LayerMask.GetMask("House")).Length != 0)
     {
-      for (int j = 0; j < 1000; j++)
+      for (int j = 0; j < 10000; j++)
       {
         position = new Vector3(Random.Range(-groundBounds.extents.x + houseBounds.extents.x, groundBounds.extents.x - houseBounds.extents.x), 1, Random.Range(-groundBounds.extents.z + houseBounds.extents.z, groundBounds.extents.z - houseBounds.extents.z));
 
-        if (Physics.OverlapBox(position, houseBounds.extents * 2, Quaternion.identity, LayerMask.GetMask("House")).Length == 0)
+        if (Physics.OverlapBox(position, houseBounds.extents, Quaternion.identity, LayerMask.GetMask("House")).Length == 0)
         {
           break;
         }

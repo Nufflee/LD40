@@ -55,87 +55,93 @@ public class PlacementManager : MonoBehaviour
     if (selected == null)
       return;
 
-    if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo, Mathf.Infinity, LayerMask.GetMask("Ground")))
+    if (!EventSystem.current.IsPointerOverGameObject(-1))
     {
-      if (hitInfo.collider == null || hitInfo.normal.z < 0)
-        return;
 
-      List<Collider> colliders = Physics.OverlapBox(selected.transform.position, selected.GetAbsoluteBounds().extents, Quaternion.identity, LayerMask.GetMask("House")).ToList();
 
-      for (int i = 0; i < colliders.Count; i++)
+
+      if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo, Mathf.Infinity, LayerMask.GetMask("Ground")))
       {
-        if (colliders[i].gameObject == selected.gameObject || colliders[i].transform.IsChildOf(selected.transform))
+        if (hitInfo.collider == null || hitInfo.normal.z < 0)
+          return;
+
+        List<Collider> colliders = Physics.OverlapBox(selected.transform.position, selected.GetAbsoluteBounds().extents, Quaternion.identity, LayerMask.GetMask("House")).ToList();
+
+        for (int i = 0; i < colliders.Count; i++)
         {
-          colliders.RemoveAt(i);
-        }
-      }
-
-      for (int i = 0; i < colliders.Count; i++)
-      {
-        if (colliders[i].gameObject.transform.IsChildOf(selected.transform))
-          colliders.RemoveAt(i);
-      }
-
-      bool overlapping = colliders.Count > 0;
-
-      Bounds groundBounds = Globals.Ground.GetComponent<Renderer>().bounds;
-      Bounds selectedBounds = selected.GetAbsoluteBounds();
-
-      bool validPlacement = !overlapping && Mathf.Abs(selected.transform.position.x) + selectedBounds.extents.x <= Mathf.Abs(groundBounds.extents.x) && Mathf.Abs(selected.transform.position.z) + selectedBounds.extents.z <= Mathf.Abs(groundBounds.extents.z);
-
-      if (Input.GetKeyDown(KeyCode.R))
-      {
-        selected.transform.eulerAngles = new Vector3(0, rotation, 0);
-
-        rotation += 90;
-
-        if (rotation > 360)
-        {
-          rotation = 90;
-        }
-      }
-
-      if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject(-1))
-      {
-        if (validPlacement)
-        {
-          if (Globals.MoneyManager.ModifyMoney(-selected.GetComponent<Building>().price))
+          if (colliders[i].gameObject == selected.gameObject || colliders[i].transform.IsChildOf(selected.transform))
           {
-            selected.GetComponent<Building>().selected = false;
-
-            Select(selected);
-
-            if (selected.GetComponent<Building>().tier == 1)
-            {
-              tier1BuildingCount++;
-            }
-
-            if (selected.GetComponent<Building>().tier == 2)
-            {
-              tier2BuildingCount++;
-            }
-
-            if (selected.GetComponent<Building>().tier == 3)
-            {
-              tier3BuildingCount++;
-            }
+            colliders.RemoveAt(i);
           }
         }
-        else
+
+        for (int i = 0; i < colliders.Count; i++)
         {
-          Globals.AlertManager.Alert("Invalid placement location!");
+          if (colliders[i].gameObject.transform.IsChildOf(selected.transform))
+            colliders.RemoveAt(i);
         }
+
+        bool overlapping = colliders.Count > 0;
+
+        Bounds groundBounds = Globals.Ground.GetComponent<Renderer>().bounds;
+        Bounds selectedBounds = selected.GetAbsoluteBounds();
+
+        bool validPlacement = !overlapping && Mathf.Abs(selected.transform.position.x) + selectedBounds.extents.x <= Mathf.Abs(groundBounds.extents.x) && Mathf.Abs(selected.transform.position.z) + selectedBounds.extents.z <= Mathf.Abs(groundBounds.extents.z);
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+          selected.transform.eulerAngles = new Vector3(0, rotation, 0);
+
+          rotation += 90;
+
+          if (rotation > 360)
+          {
+            rotation = 90;
+          }
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+          if (validPlacement)
+          {
+            if (Globals.MoneyManager.ModifyMoney(-selected.GetComponent<Building>().price))
+            {
+              selected.GetComponent<Building>().selected = false;
+
+              Select(selected);
+
+              if (selected.GetComponent<Building>().tier == 1)
+              {
+                tier1BuildingCount++;
+              }
+
+              if (selected.GetComponent<Building>().tier == 2)
+              {
+                tier2BuildingCount++;
+              }
+
+              if (selected.GetComponent<Building>().tier == 3)
+              {
+                tier3BuildingCount++;
+              }
+            }
+          }
+          else
+          {
+            Globals.AlertManager.Alert("Invalid placement location!");
+          }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(1))
+        {
+          DeSelect();
+        }
+
+        if (selected == null)
+          return;
+
+        selected.transform.position = new Vector3(hitInfo.point.x, selected.transform.position.y, hitInfo.point.z);
       }
-
-      if (Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(1))
-      {
-        DeSelect();
-      }
-
-      if (selected == null)
-        return;
-
-      selected.transform.position = new Vector3(hitInfo.point.x, selected.transform.position.y, hitInfo.point.z);
     }
   }
 
