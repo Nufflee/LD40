@@ -33,6 +33,11 @@ public class PlacementManager : MonoBehaviour
 
     if (bulldozing)
     {
+      if (Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(1))
+      {
+        bulldozing = false;
+      }
+
       if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo, Mathf.Infinity, LayerMask.GetMask("House")))
       {
         if (Input.GetMouseButtonDown(0))
@@ -41,11 +46,6 @@ public class PlacementManager : MonoBehaviour
           {
             hitInfo.collider.transform.root.GetComponent<Building>().Collapse();
           }
-        }
-
-        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(1))
-        {
-          bulldozing = false;
         }
       }
     }

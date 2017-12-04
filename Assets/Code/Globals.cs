@@ -37,7 +37,7 @@ public class Globals : MonoBehaviour
     get { return houseSpawner ?? (houseSpawner = FindObjectOfType<HouseSpawner>()); }
   }
 
-  private void Awake()
+  private void Start()
   {
     ground = GameObject.Find("Ground");
     placementManager = FindObjectOfType<PlacementManager>();

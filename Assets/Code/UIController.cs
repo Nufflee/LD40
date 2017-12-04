@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using System;
+using UnityEngine;
 
 public class UIController : MonoBehaviour
 {
@@ -7,7 +7,7 @@ public class UIController : MonoBehaviour
   private GameObject tier2;
   private GameObject tier3;
 
-  private Image buttonImage;
+  private GameObject button;
 
   private bool green;
 
@@ -16,21 +16,35 @@ public class UIController : MonoBehaviour
     tier1 = Globals.Buildings.Tier1;
     tier2 = Globals.Buildings.Tier2;
     tier3 = Globals.Buildings.Tier3;
+
+    try
+    {
+      button = transform.Find("Panel/BulldozerButton").gameObject;
+    }
+    catch (NullReferenceException e)
+    {
+    }
   }
 
   private void Update()
   {
-    if (Globals.PlacementManager.bulldozing && !buttonImage.gameObject.GetComponent<Animation>().isPlaying && green == false)
+    try
     {
-      buttonImage.gameObject.GetComponent<Animation>().Play("LerpToGreen");
+      if (Globals.PlacementManager.bulldozing && !button.GetComponent<Animation>().isPlaying && green == false)
+      {
+        button.gameObject.GetComponent<Animation>().Play("LerpToGreen");
 
-      green = true;
+        green = true;
+      }
+      else if (!Globals.PlacementManager.bulldozing && !button.GetComponent<Animation>().isPlaying && green)
+      {
+        button.gameObject.GetComponent<Animation>().Play("LerpFromGreen");
+
+        green = false;
+      }
     }
-    else if (!Globals.PlacementManager.bulldozing && !buttonImage.gameObject.GetComponent<Animation>().isPlaying && green)
+    catch (NullReferenceException e)
     {
-      buttonImage.gameObject.GetComponent<Animation>().Play("LerpFromGreen");
-
-      green = false;
     }
   }
 
@@ -52,10 +66,8 @@ public class UIController : MonoBehaviour
     }
   }
 
-  public void OnClickBulldoze(Image buttonImage)
+  public void OnClickBulldoze(GameObject button)
   {
-    this.buttonImage = buttonImage;
-
     Globals.PlacementManager.DeSelect();
     Globals.PlacementManager.bulldozing = !Globals.PlacementManager.bulldozing;
   }

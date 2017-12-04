@@ -8,7 +8,7 @@ public class Buildings : MonoBehaviour
 
   public GameObject NoElectricityPopUp { get; private set; }
 
-  private void Awake()
+  private void Start()
   {
     Tier1 = Resources.Load<GameObject>("Prefabs/BuildingTier1");
     Tier2 = Resources.Load<GameObject>("Prefabs/BuildingTier2");
