@@ -57,9 +57,6 @@ public class PlacementManager : MonoBehaviour
 
     if (!EventSystem.current.IsPointerOverGameObject(-1))
     {
-
-
-
       if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo, Mathf.Infinity, LayerMask.GetMask("Ground")))
       {
         if (hitInfo.collider == null || hitInfo.normal.z < 0)
