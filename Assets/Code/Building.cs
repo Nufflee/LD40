@@ -34,8 +34,6 @@ public class Building : MonoBehaviour
 
   private void Update()
   {
-    print(failed);
-
     if (selected)
       return;
 
@@ -43,7 +41,7 @@ public class Building : MonoBehaviour
     {
       nextClickTime = Time.time + Random.Range(3.0f, 8.0f) - tier / 4.0f;
     }
-    if (failed == 1)
+    if (failed >= 3) // TODO: This needs to be changed
     {
       Collapse();
     }
@@ -60,7 +58,8 @@ public class Building : MonoBehaviour
 
           failed--;
 
-          Globals.HouseSpawner.ModifyScore(2);
+          Globals.HouseSpawner.ModifyScore(Random.Range(1, 3) * tier);
+          Globals.MoneyManager.ModifyMoney(Random.Range(1000 * tier, 7500 * tier));
 
           StartCoroutine(ScaleDownCoroutine());
         }
@@ -98,7 +97,7 @@ public class Building : MonoBehaviour
 
   public void Collapse()
   {
-    Globals.HouseSpawner.ModifyScore(-5);
+    Globals.HouseSpawner.ModifyScore(Random.Range(-5, -1) * tier);
 
     if (tier == 1)
     {

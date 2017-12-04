@@ -547,7 +547,7 @@ GameObject:
   - component: {fileID: 753917049}
   - component: {fileID: 753917048}
   m_Layer: 5
-  m_Name: InvalidPlacementText
+  m_Name: AlertText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -560,7 +560,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 753917046}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -414.74866, z: 0}
+  m_LocalPosition: {x: -0.000061035156, y: -402.74866, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1285161159}
@@ -568,8 +568,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 126}
-  m_SizeDelta: {x: 362.4, y: 50}
+  m_AnchoredPosition: {x: -0.000049591, y: 138}
+  m_SizeDelta: {x: 590.6, y: 82.6}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &753917048
 MonoBehaviour:
@@ -590,7 +590,9 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: Placement invalid!
+  m_text: 'dasdsadas
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 715b80e429c437e40867928a4e1fc975, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 715b80e429c437e40867928a4e1fc975, type: 2}
@@ -624,7 +626,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_textAlignment: 257
+  m_textAlignment: 514
   m_isAlignmentEnumConverted: 1
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -657,10 +659,10 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 753917048}
-    characterCount: 18
+    characterCount: 10
     spriteCount: 0
     spaceCount: 1
-    wordCount: 2
+    wordCount: 1
     linkCount: 0
     lineCount: 1
     pageCount: 1
@@ -698,6 +700,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1097503500}
   - component: {fileID: 1097503499}
+  - component: {fileID: 1097503501}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -733,6 +736,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1097503501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1097503498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b007e543f230402c9c7a0c56c844f57f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1145682365
 GameObject:
   m_ObjectHideFlags: 0
@@ -1132,6 +1146,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbfad03719715e841816ec34ecb4877f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moneyEarned: 0
 --- !u!1 &1342313640
 GameObject:
   m_ObjectHideFlags: 0
@@ -1277,7 +1292,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1494207300}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -934.99994, y: 44.12, z: 0}
+  m_LocalPosition: {x: -934.99994, y: 20.119999, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1342313641}
@@ -1288,7 +1303,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 25, y: 0}
+  m_AnchoredPosition: {x: 25, y: -24}
   m_SizeDelta: {x: 1920, y: 52.800003}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &1494207302

@@ -42,7 +42,9 @@ public class HouseSpawner : MonoBehaviour
   // Update is called once per frame
   public void Update()
   {
-    int newScore = tempScore + Globals.PlacementManager.tier1BuildingCount + Globals.PlacementManager.tier2BuildingCount * 2 + Globals.PlacementManager.tier3BuildingCount * 3; // get money and click success rate here
+    int newScore = Globals.MoneyManager.moneyEarned / 2000 + tempScore + Globals.PlacementManager.tier1BuildingCount + Globals.PlacementManager.tier2BuildingCount * 2 + Globals.PlacementManager.tier3BuildingCount * 3; // get money and click success rate here
+
+    print("Current score " + newScore);
 
     if (newScore - score >= 10)
     {
