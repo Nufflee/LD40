@@ -9,11 +9,14 @@ public class AlertManager : MonoBehaviour
   private void Start()
   {
     alertText = GameObject.Find("AlertText").GetComponent<TextMeshProUGUI>();
+    alertText.gameObject.SetActive(false);
   }
 
   public void Alert(string message)
   {
     alertText.text = message;
+    alertText.gameObject.SetActive(true);
+
     StartCoroutine(ShowAlertCoroutine());
   }
 
@@ -34,5 +37,7 @@ public class AlertManager : MonoBehaviour
 
       yield return null;
     }
+
+    alertText.gameObject.SetActive(false);
   }
 }

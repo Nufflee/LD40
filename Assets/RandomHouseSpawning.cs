@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 public class RandomHouseSpawning : MonoBehaviour
 {
@@ -31,6 +33,7 @@ public class RandomHouseSpawning : MonoBehaviour
   private void Spawn(int tier)
   {
     GameObject toSpawn = null;
+
     if (tier == 1)
     {
       toSpawn = Globals.Buildings.Tier1;
@@ -45,19 +48,67 @@ public class RandomHouseSpawning : MonoBehaviour
     }
 
     Bounds groundBounds = Globals.Ground.GetComponent<Renderer>().bounds;
-    Bounds houseBounds = toSpawn.GetAbsoluteBounds();
+    Bounds selectedBounds = toSpawn.GetAbsoluteBounds();
 
-    Vector3 position = new Vector3(Random.Range(-groundBounds.extents.x + houseBounds.extents.x / 2, groundBounds.extents.x - houseBounds.extents.x / 2), 1, Random.Range(-groundBounds.extents.z + houseBounds.extents.z / 2, groundBounds.extents.z - houseBounds.extents.z / 2));
+    List<Collider> colliders = Physics.OverlapSphere(toSpawn.GetAbsoluteBounds().center, toSpawn.GetAbsoluteBounds().extents.x > toSpawn.GetAbsoluteBounds().extents.z ? toSpawn.GetAbsoluteBounds().extents.x : toSpawn.GetAbsoluteBounds().extents.z, LayerMask.GetMask("House")).ToList();
 
-    if (Physics.OverlapBox(position, houseBounds.extents, Quaternion.identity, LayerMask.GetMask("House")).Length != 0)
+    for (int i = 0; i < colliders.Count; i++)
     {
-      for (int j = 0; j < 100000; j++)
+      if (colliders[i].gameObject == toSpawn.gameObject || colliders[i].transform.IsChildOf(toSpawn.transform))
       {
-        position = new Vector3(Random.Range(-groundBounds.extents.x + houseBounds.extents.x / 2, groundBounds.extents.x - houseBounds.extents.x / 2), 1, Random.Range(-groundBounds.extents.z + houseBounds.extents.z / 2, groundBounds.extents.z - houseBounds.extents.z / 2));
+        colliders.RemoveAt(i);
+      }
+    }
 
-        if (Physics.OverlapBox(position, houseBounds.extents, Quaternion.identity, LayerMask.GetMask("House")).Length == 0)
+    for (int i = 0; i < colliders.Count; i++)
+    {
+      if (colliders[i].gameObject.transform.IsChildOf(toSpawn.transform))
+        colliders.RemoveAt(i);
+    }
+
+    Vector3 position = new Vector3(Random.Range(-groundBounds.extents.x + selectedBounds.extents.x, groundBounds.extents.x - selectedBounds.extents.x), 1, Random.Range(-groundBounds.extents.z + selectedBounds.extents.z, groundBounds.extents.z - selectedBounds.extents.z));
+
+    bool overlapping = colliders.Count > 0;
+
+    bool validPlacement = !overlapping && Mathf.Abs(toSpawn.transform.position.x) + selectedBounds.extents.x <= Mathf.Abs(groundBounds.extents.x) && Mathf.Abs(toSpawn.transform.position.z) + selectedBounds.extents.z <= Mathf.Abs(groundBounds.extents.z);
+
+    if (!validPlacement)
+    {
+      for (int i = 0; i < 10000; i++)
+      {
+        position = new Vector3(Random.Range(-groundBounds.extents.x + selectedBounds.extents.x, groundBounds.extents.x - selectedBounds.extents.x), 1, Random.Range(-groundBounds.extents.z + selectedBounds.extents.z, groundBounds.extents.z - selectedBounds.extents.z));
+
+        print(position);
+
+        toSpawn.transform.position = position;
+
+        colliders = Physics.OverlapSphere(toSpawn.GetAbsoluteBounds().center, toSpawn.GetAbsoluteBounds().extents.x > toSpawn.GetAbsoluteBounds().extents.z ? toSpawn.GetAbsoluteBounds().extents.x : toSpawn.GetAbsoluteBounds().extents.z, LayerMask.GetMask("House")).ToList();
+
+        for (int j = 0; j < colliders.Count; j++)
+        {
+          if (colliders[j].gameObject == toSpawn.gameObject || colliders[j].transform.IsChildOf(toSpawn.transform))
+          {
+            colliders.RemoveAt(j);
+          }
+        }
+
+        for (int j = 0; j < colliders.Count; j++)
+        {
+          if (colliders[j].gameObject.transform.IsChildOf(toSpawn.transform))
+            colliders.RemoveAt(j);
+        }
+
+        overlapping = colliders.Count > 0;
+
+        validPlacement = !overlapping && Mathf.Abs(toSpawn.transform.position.x) + selectedBounds.extents.x <= Mathf.Abs(groundBounds.extents.x) && Mathf.Abs(toSpawn.transform.position.z) + selectedBounds.extents.z <= Mathf.Abs(groundBounds.extents.z);
+
+        if (validPlacement)
         {
           break;
+        }
+        else
+        {
+          print(validPlacement);
         }
       }
     }
@@ -77,6 +128,7 @@ public class RandomHouseSpawning : MonoBehaviour
         }
       }
     }
+
     Destroy(GO.GetComponent<Building>());
   }
 }

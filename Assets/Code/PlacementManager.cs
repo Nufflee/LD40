@@ -2,10 +2,13 @@
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class PlacementManager : MonoBehaviour
 {
   private GameObject selected;
+
+  public int absoluteBuildingCount;
 
   public int tier1BuildingCount;
   public int tier2BuildingCount;
@@ -26,6 +29,9 @@ public class PlacementManager : MonoBehaviour
 
   private void Update()
   {
+    if (tier1BuildingCount + tier2BuildingCount + tier3BuildingCount <= 0 && absoluteBuildingCount > 0)
+      SceneManager.LoadScene("EndStats");
+
     RaycastHit hitInfo;
 
     if (bulldozing)
@@ -62,7 +68,7 @@ public class PlacementManager : MonoBehaviour
         if (hitInfo.collider == null || hitInfo.normal.z < 0)
           return;
 
-        List<Collider> colliders = Physics.OverlapBox(selected.transform.position, selected.GetAbsoluteBounds().extents, Quaternion.identity, LayerMask.GetMask("House")).ToList();
+        List<Collider> colliders = Physics.OverlapSphere(selected.GetAbsoluteBounds().center, selected.GetAbsoluteBounds().extents.x > selected.GetAbsoluteBounds().extents.z ? selected.GetAbsoluteBounds().extents.x : selected.GetAbsoluteBounds().extents.z, LayerMask.GetMask("House")).ToList();
 
         for (int i = 0; i < colliders.Count; i++)
         {
@@ -121,6 +127,8 @@ public class PlacementManager : MonoBehaviour
               {
                 tier3BuildingCount++;
               }
+
+              absoluteBuildingCount += selected.GetComponent<Building>().tier;
             }
           }
           else

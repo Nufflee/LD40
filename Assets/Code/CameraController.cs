@@ -3,36 +3,39 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-  private float zoomAmount;
-  private float zoom;
-
   private bool canZoomIn = true;
   private bool canZoomOut = true;
   private bool lerping;
 
   float ZoomAmount = 0; //With Positive and negative values
-  float MaxToClamp = 10;
+  float MaxToClamp = 1.2f;
+  private float MinToClamp = -1.2f;
   float ROTSpeed = 10;
 
-  private void Update()
+  private void FixedUpdate()
   {
     if (Physics.OverlapSphere(transform.position, 0.5f).Length != 0)
     {
       canZoomIn = false;
     }
 
-    if (zoomAmount <= -4 && zoomAmount <= 0)
+/*    if (zoomAmount <= -4 && zoomAmount <= 0)
     {
       canZoomOut = false;
+    }*/
+
+/*    zoomAmount = Mathf.Clamp(zoomAmount, -4, 0);
+    print(zoomAmount);*/
+
+    if (Input.GetAxis("Mouse ScrollWheel") < 0)
+    {
+      Camera.main.fieldOfView += 5;
     }
-
-    zoomAmount = Mathf.Clamp(zoomAmount, -4, 0);
-    print(zoomAmount);
-
-    ZoomAmount += Input.GetAxis("Mouse ScrollWheel");
-    ZoomAmount = Mathf.Clamp(ZoomAmount, -MaxToClamp, MaxToClamp);
-    var translate = Mathf.Min(Mathf.Abs(Input.GetAxis("Mouse ScrollWheel")), MaxToClamp - Mathf.Abs(ZoomAmount));
-    gameObject.transform.Translate(0, 0, translate * ROTSpeed * Mathf.Sign(Input.GetAxis("Mouse ScrollWheel")));
+    if (Input.GetAxis("Mouse ScrollWheel") > 0)
+    {
+      Camera.main.fieldOfView -= 5;
+    }
+    Camera.main.fieldOfView = Mathf.Clamp(Camera.main.fieldOfView, 20, 90);
 
 /*
     ZoomCamera();
@@ -74,7 +77,9 @@ public class CameraController : MonoBehaviour
       }
       canZoomIn = true;
       canZoomOut = true;
+/*
       zoomAmount += direction.z * 1.5f;
+*/
       if (lerping)
       {
         StopAllCoroutines();

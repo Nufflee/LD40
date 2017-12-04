@@ -7,10 +7,11 @@ public class MoneyManager : MonoBehaviour
 {
   private TextMeshProUGUI moneyText;
 
-  private int money = 100000;
+  private int money = 10000000;
   private string moneyString;
 
   public int moneyEarned;
+  public int moneySpent;
 
   private void Start()
   {
@@ -29,6 +30,10 @@ public class MoneyManager : MonoBehaviour
     if (delta > 0)
     {
       moneyEarned += delta;
+    }
+    else
+    {
+      moneySpent += Mathf.Abs(delta);
     }
 
     money += delta;
