@@ -45,6 +45,8 @@ public class PlacementManager : MonoBehaviour
           if (hitInfo.collider.transform.root.GetComponent<Building>() != null)
           {
             hitInfo.collider.transform.root.GetComponent<Building>().Collapse();
+
+            Globals.MoneyManager.ModifyMoney(-hitInfo.collider.transform.root.GetComponent<Building>().price);
           }
         }
       }
@@ -106,6 +108,8 @@ public class PlacementManager : MonoBehaviour
           }
 
           selected.GetComponent<Building>().selected = false;
+
+          Globals.MoneyManager.ModifyMoney(selected.GetComponent<Building>().price);
 
           Select(selected);
         }

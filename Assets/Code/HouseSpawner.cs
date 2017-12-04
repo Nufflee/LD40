@@ -44,8 +44,6 @@ public class HouseSpawner : MonoBehaviour
   {
     int newScore = tempScore + Globals.PlacementManager.tier1BuildingCount + Globals.PlacementManager.tier2BuildingCount * 2 + Globals.PlacementManager.tier3BuildingCount * 3; // get money and click success rate here
 
-    print("Current score: " + newScore);
-
     if (newScore - score >= 10)
     {
       score = newScore;

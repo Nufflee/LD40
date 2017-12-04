@@ -37,6 +37,13 @@ public class Globals : MonoBehaviour
     get { return houseSpawner ?? (houseSpawner = FindObjectOfType<HouseSpawner>()); }
   }
 
+  private static MoneyManager moneyMananger;
+
+  public static MoneyManager MoneyManager
+  {
+    get { return moneyMananger ?? (moneyMananger = FindObjectOfType<MoneyManager>()); }
+  }
+
   private void Start()
   {
     ground = GameObject.Find("Ground");
@@ -44,5 +51,6 @@ public class Globals : MonoBehaviour
     buildings = FindObjectOfType<Buildings>();
     worldSpaceCanvas = GameObject.Find("WorldSpaceCanvas").GetComponent<Canvas>();
     houseSpawner = FindObjectOfType<HouseSpawner>();
+    moneyMananger = FindObjectOfType<MoneyManager>();
   }
 }

@@ -15,4 +15,12 @@ public static class Extensions
 
     return combinedBounds;
   }
+
+  public static string SubstringRange(this string value, int startIndex, int endIndex)
+  {
+    int length = endIndex - startIndex;
+    string piece = value.Substring(startIndex, length);
+
+    return piece;
+  }
 }
