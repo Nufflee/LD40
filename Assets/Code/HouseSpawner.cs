@@ -122,42 +122,41 @@ public class HouseSpawner : MonoBehaviour
       }
     }
   }
+	private void Spawn(int tier)
+	{
+		GameObject toSpawn = null;
 
-  private void Spawn(int tier)
-  {
-    GameObject toSpawn = null;
+		if (tier == 1)
+		{
+			toSpawn = Globals.Buildings.Tier1;
+		}
+		if (tier == 2)
+		{
+			toSpawn = Globals.Buildings.Tier2;
+		}
+		if (tier == 3)
+		{
+			toSpawn = Globals.Buildings.Tier3;
+		}
 
-    if (tier == 1)
-    {
-      toSpawn = Globals.Buildings.Tier1;
-    }
-    if (tier == 2)
-    {
-      toSpawn = Globals.Buildings.Tier2;
-    }
-    if (tier == 3)
-    {
-      toSpawn = Globals.Buildings.Tier3;
-    }
+		Bounds groundBounds = Globals.Ground.GetComponent<Renderer>().bounds;
+		Bounds houseBounds = toSpawn.GetAbsoluteBounds();
 
-    Bounds groundBounds = Globals.Ground.GetComponent<Renderer>().bounds;
-    Bounds houseBounds = toSpawn.GetAbsoluteBounds();
+		Vector3 position = new Vector3(Random.Range(-groundBounds.extents.x + houseBounds.extents.x, groundBounds.extents.x - houseBounds.extents.x), 1, Random.Range(-groundBounds.extents.z + houseBounds.extents.z, groundBounds.extents.z - houseBounds.extents.z));
 
-    Vector3 position = new Vector3(Random.Range(-groundBounds.extents.x + houseBounds.extents.x, groundBounds.extents.x - houseBounds.extents.x), 1, Random.Range(-groundBounds.extents.z + houseBounds.extents.z, groundBounds.extents.z - houseBounds.extents.z));
+		if (Physics.OverlapBox(position, houseBounds.extents * 2, Quaternion.identity, LayerMask.GetMask("House")).Length != 0)
+		{
+			for (int j = 0; j < 1000; j++)
+			{
+				position = new Vector3(Random.Range(-groundBounds.extents.x + houseBounds.extents.x, groundBounds.extents.x - houseBounds.extents.x), 1, Random.Range(-groundBounds.extents.z + houseBounds.extents.z, groundBounds.extents.z - houseBounds.extents.z));
 
-    if (Physics.OverlapBox(position, houseBounds.extents * 2, Quaternion.identity, LayerMask.GetMask("House")).Length != 0)
-    {
-      for (int j = 0; j < 1000; j++)
-      {
-        position = new Vector3(Random.Range(-groundBounds.extents.x + houseBounds.extents.x, groundBounds.extents.x - houseBounds.extents.x), 1, Random.Range(-groundBounds.extents.z + houseBounds.extents.z, groundBounds.extents.z - houseBounds.extents.z));
+				if (Physics.OverlapBox(position, houseBounds.extents * 2, Quaternion.identity, LayerMask.GetMask("House")).Length == 0)
+				{
+					break;
+				}
+			}
+		}
 
-        if (Physics.OverlapBox(position, houseBounds.extents * 2, Quaternion.identity, LayerMask.GetMask("House")).Length == 0)
-        {
-          break;
-        }
-      }
-    }
-
-    Instantiate(toSpawn, position, Quaternion.identity);
-  }
+		Instantiate(toSpawn, position, Quaternion.identity);
+	}
 }
