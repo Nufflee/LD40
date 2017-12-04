@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -9,13 +7,13 @@ public class PlacementManager : MonoBehaviour
 {
   private GameObject selected;
 
-  private TextMeshProUGUI invalidPlacementText;
-
   public int tier1BuildingCount;
   public int tier2BuildingCount;
   public int tier3BuildingCount;
 
   public bool bulldozing;
+
+  private int rotation = 90;
 
   public bool Selecting
   {
@@ -24,7 +22,6 @@ public class PlacementManager : MonoBehaviour
 
   private void Start()
   {
-    invalidPlacementText = GameObject.Find("InvalidPlacementText").GetComponent<TextMeshProUGUI>();
   }
 
   private void Update()
@@ -46,7 +43,10 @@ public class PlacementManager : MonoBehaviour
           {
             hitInfo.collider.transform.root.GetComponent<Building>().Collapse();
 
-            Globals.MoneyManager.ModifyMoney(-hitInfo.collider.transform.root.GetComponent<Building>().price);
+            int price = hitInfo.collider.transform.root.GetComponent<Building>().price;
+
+            Globals.MoneyManager.ModifyMoney(price - (int) (price * 0.75f));
+            print(price - (int) (price * 0.75f));
           }
         }
       }
@@ -85,37 +85,45 @@ public class PlacementManager : MonoBehaviour
 
       if (Input.GetKeyDown(KeyCode.R))
       {
-        selected.transform.Rotate(new Vector3(0, 1, 0), 90.0f);
+        selected.transform.eulerAngles = new Vector3(0, rotation, 0);
+
+        rotation += 90;
+
+        if (rotation > 360)
+        {
+          rotation = 90;
+        }
       }
 
       if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject(-1))
       {
         if (validPlacement)
         {
-          if (selected.GetComponent<Building>().tier == 1)
+          if (Globals.MoneyManager.ModifyMoney(-selected.GetComponent<Building>().price))
           {
-            tier1BuildingCount++;
+            selected.GetComponent<Building>().selected = false;
+
+            Select(selected);
+
+            if (selected.GetComponent<Building>().tier == 1)
+            {
+              tier1BuildingCount++;
+            }
+
+            if (selected.GetComponent<Building>().tier == 2)
+            {
+              tier2BuildingCount++;
+            }
+
+            if (selected.GetComponent<Building>().tier == 3)
+            {
+              tier3BuildingCount++;
+            }
           }
-
-          if (selected.GetComponent<Building>().tier == 2)
-          {
-            tier2BuildingCount++;
-          }
-
-          if (selected.GetComponent<Building>().tier == 3)
-          {
-            tier3BuildingCount++;
-          }
-
-          selected.GetComponent<Building>().selected = false;
-
-          Globals.MoneyManager.ModifyMoney(selected.GetComponent<Building>().price);
-
-          Select(selected);
         }
         else
         {
-          StartCoroutine(ShowInvalidPlacementText());
+          Globals.AlertManager.Alert("Invalid placement location!");
         }
       }
 
@@ -162,24 +170,5 @@ public class PlacementManager : MonoBehaviour
   {
     Destroy(selected);
     selected = null;
-  }
-
-  private IEnumerator ShowInvalidPlacementText()
-  {
-    while (invalidPlacementText.GetComponent<TextMeshProUGUI>().color.a <= 1)
-    {
-      invalidPlacementText.GetComponent<TextMeshProUGUI>().color += new Color(0.0f, 0.0f, 0.0f, 0.1f);
-
-      yield return null;
-    }
-
-    yield return new WaitForSeconds(0.5f);
-
-    while (invalidPlacementText.GetComponent<TextMeshProUGUI>().color.a > 0)
-    {
-      invalidPlacementText.GetComponent<TextMeshProUGUI>().color -= new Color(0.0f, 0.0f, 0.0f, 0.1f);
-
-      yield return null;
-    }
   }
 }
