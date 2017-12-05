@@ -9,6 +9,11 @@ public class UIController : MonoBehaviour
 
   private GameObject button;
 
+  private GameObject Button
+  {
+    get { return button != null ? button : transform.Find("Panel/BulldozerButton").gameObject; }
+  }
+
   private bool green;
 
   private void Start()
@@ -63,6 +68,10 @@ public class UIController : MonoBehaviour
     else if (tier == 3)
     {
       Globals.PlacementManager.Select(Globals.Buildings.Tier3);
+    }
+    else if (tier == 4)
+    {
+      Globals.PlacementManager.Select(Globals.Buildings.Tree, true);
     }
   }
 

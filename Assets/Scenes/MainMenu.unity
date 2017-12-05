@@ -217,7 +217,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 792680557}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 960.0001, y: 423, z: 0}
+  m_LocalPosition: {x: 960, y: 423.74866, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1285161159}
@@ -371,7 +371,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 837464711}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 975.4, y: -125, z: 0}
+  m_LocalPosition: {x: 975.3999, y: -125, z: 0}
   m_LocalScale: {x: 0.9999972, y: 0.9999972, z: 0.9999972}
   m_Children:
   - {fileID: 1354180420}
@@ -689,8 +689,8 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1285161154}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 808, y: 454.5, z: 0}
-  m_LocalScale: {x: 0.84166664, y: 0.84166664, z: 0.84166664}
+  m_LocalPosition: {x: 280.5, y: 158, z: 0}
+  m_LocalScale: {x: 0.2921875, y: 0.2921875, z: 0.2921875}
   m_Children:
   - {fileID: 792680558}
   - {fileID: 1336054452}
@@ -728,7 +728,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1336054451}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 975.4, y: -0.000015258789, z: 0}
+  m_LocalPosition: {x: 975.3999, y: -0.000015258789, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1662717443}
@@ -978,6 +978,66 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1354180419}
+--- !u!1 &1475663139
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1475663141}
+  - component: {fileID: 1475663140}
+  - component: {fileID: 1475663142}
+  m_Layer: 0
+  m_Name: Managers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1475663140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1475663139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbfad03719715e841816ec34ecb4877f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moneyEarned: 0
+  moneySpent: 0
+--- !u!4 &1475663141
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1475663139}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -55.658295, y: -56.559753, z: -66.72708}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1475663142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1475663139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42a5d54696a64dd7a6bbdea13f22e9fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  absoluteBuildingCount: 0
+  tier1BuildingCount: 0
+  tier2BuildingCount: 0
+  tier3BuildingCount: 0
+  treeCount: 0
+  bulldozing: 0
 --- !u!1 &1576762421
 GameObject:
   m_ObjectHideFlags: 0
@@ -990,6 +1050,7 @@ GameObject:
   - component: {fileID: 1576762424}
   - component: {fileID: 1576762423}
   - component: {fileID: 1576762427}
+  - component: {fileID: 1576762422}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -997,6 +1058,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1576762422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1576762421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff26db721962cdf4a8edcdfa9a767d2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  profile: {fileID: 11400000, guid: 75ce96b5d079de84c8764b484dc39980, type: 2}
 --- !u!81 &1576762423
 AudioListener:
   m_ObjectHideFlags: 0

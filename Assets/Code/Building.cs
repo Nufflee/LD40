@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Building : MonoBehaviour
 {
@@ -41,7 +42,8 @@ public class Building : MonoBehaviour
     {
       nextClickTime = Time.time + Random.Range(3.0f, 8.0f) - tier / 4.0f;
     }
-    if (failed >= 333) // TODO: This needs to be changed
+
+    if (failed >= 5)
     {
       Collapse();
     }
@@ -57,6 +59,8 @@ public class Building : MonoBehaviour
           StopAllCoroutines();
 
           failed--;
+
+          popup.GetComponentInChildren<Image>().color = Color.green;
 
           Globals.HouseSpawner.ModifyScore(Random.Range(1, 3) * tier);
           Globals.MoneyManager.ModifyMoney(Random.Range(2500 * tier, 7500 * tier));
@@ -75,7 +79,7 @@ public class Building : MonoBehaviour
  
      fs.Clear();*/
 
-    if (Time.time >= nextClickTime + 10.0f && (!scalingDown && !scalingUp))
+    if (Time.time >= nextClickTime + 18.0f && (!scalingDown && !scalingUp))
     {
       //popup.GetComponent<Animation>().Stop();
 
@@ -83,7 +87,7 @@ public class Building : MonoBehaviour
       StartCoroutine(ScaleDownCoroutine());
     }
 
-    if (Time.time >= nextClickTime + 7.0f && (!scalingDown && !scalingUp) && !popup.GetComponent<Animation>().isPlaying)
+    if (Time.time >= nextClickTime + 14.0f && (!scalingDown && !scalingUp) && !popup.GetComponent<Animation>().isPlaying)
     {
       popup.GetComponent<Animation>().Play("PopUpWarning");
     }

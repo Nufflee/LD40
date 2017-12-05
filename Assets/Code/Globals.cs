@@ -54,6 +54,8 @@ public class Globals : MonoBehaviour
   private void Start()
   {
     DontDestroyOnLoad(this);
+    DontDestroyOnLoad(MoneyManager.gameObject);
+    DontDestroyOnLoad(PlacementManager.gameObject);
 
     ground = GameObject.Find("Ground");
     placementManager = FindObjectOfType<PlacementManager>();

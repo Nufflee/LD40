@@ -7,7 +7,7 @@ public class MoneyManager : MonoBehaviour
 {
   private TextMeshProUGUI moneyText;
 
-  private int money = 10000000;
+  private int money = 500000;
   private string moneyString;
 
   public int moneyEarned;
@@ -15,7 +15,13 @@ public class MoneyManager : MonoBehaviour
 
   private void Start()
   {
-    moneyText = transform.Find("Panel/MoneyText").GetComponent<TextMeshProUGUI>();
+    try
+    {
+      moneyText = transform.Find("Panel/MoneyText").GetComponent<TextMeshProUGUI>();
+    }
+    catch (NullReferenceException)
+    {
+    }
   }
 
   public bool ModifyMoney(int delta, bool popup = true)
@@ -43,6 +49,9 @@ public class MoneyManager : MonoBehaviour
 
   private void Update()
   {
+    if (moneyText == null)
+      return;
+
     moneyString = "$";
 
     if (money < 1000)

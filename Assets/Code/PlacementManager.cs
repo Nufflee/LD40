@@ -14,6 +14,10 @@ public class PlacementManager : MonoBehaviour
   public int tier2BuildingCount;
   public int tier3BuildingCount;
 
+  public int treeCount;
+
+  private bool unloaded;
+
   public bool bulldozing;
 
   private int rotation = 90;
@@ -29,8 +33,11 @@ public class PlacementManager : MonoBehaviour
 
   private void Update()
   {
-    if (tier1BuildingCount + tier2BuildingCount + tier3BuildingCount <= 0 && absoluteBuildingCount > 0)
+    if (tier1BuildingCount + tier2BuildingCount + tier3BuildingCount <= 0 && absoluteBuildingCount > 0 && !unloaded)
+    {
       SceneManager.LoadScene("EndStats");
+      unloaded = true;
+    }
 
     RaycastHit hitInfo;
 
@@ -53,6 +60,11 @@ public class PlacementManager : MonoBehaviour
 
             Globals.MoneyManager.ModifyMoney(price - (int) (price * 0.75f));
             print(price - (int) (price * 0.75f));
+          }
+          else
+          {
+            Globals.MoneyManager.ModifyMoney(75);
+            treeCount--;
           }
         }
       }
@@ -84,7 +96,15 @@ public class PlacementManager : MonoBehaviour
             colliders.RemoveAt(i);
         }
 
+        for (int i = 0; i < colliders.Count; i++)
+        {
+          if (colliders[i].gameObject.transform.IsChildOf(selected.transform))
+            colliders.RemoveAt(i);
+        }
+
         bool overlapping = colliders.Count > 0;
+
+        print(overlapping);
 
         Bounds groundBounds = Globals.Ground.GetComponent<Renderer>().bounds;
         Bounds selectedBounds = selected.GetAbsoluteBounds();
@@ -107,7 +127,16 @@ public class PlacementManager : MonoBehaviour
         {
           if (validPlacement)
           {
-            if (Globals.MoneyManager.ModifyMoney(-selected.GetComponent<Building>().price))
+            if (selected.GetComponent<Building>() == null)
+            {
+              if (Globals.MoneyManager.ModifyMoney(-100))
+              {
+                Select(selected, true);
+
+                treeCount++;
+              }
+            }
+            else if (Globals.MoneyManager.ModifyMoney(-selected.GetComponent<Building>().price))
             {
               selected.GetComponent<Building>().selected = false;
 
@@ -150,7 +179,7 @@ public class PlacementManager : MonoBehaviour
     }
   }
 
-  public void Select(GameObject placeable)
+  public void Select(GameObject placeable, bool tree = false)
   {
     bulldozing = false;
 
@@ -159,22 +188,26 @@ public class PlacementManager : MonoBehaviour
     float desiredY = Globals.Ground.transform.position.y + selected.GetAbsoluteBounds().extents.y / 2;
 
     selected.transform.position = new Vector3(0, desiredY, 0);
-    selected.name = "House";
 
-    Color color = Random.ColorHSV();
-
-    foreach (Renderer renderer in selected.GetComponentsInChildren<Renderer>())
+    if (!tree)
     {
-      foreach (Material material in renderer.materials)
+      selected.name = "House";
+
+      Color color = Random.ColorHSV();
+
+      foreach (Renderer renderer in selected.GetComponentsInChildren<Renderer>())
       {
-        if (material.name.Contains("HouseBase"))
+        foreach (Material material in renderer.materials)
         {
-          material.color = color;
+          if (material.name.Contains("HouseBase"))
+          {
+            material.color = color;
+          }
         }
       }
-    }
 
-    selected.GetComponent<Building>().selected = true;
+      selected.GetComponent<Building>().selected = true;
+    }
   }
 
   public void DeSelect()
